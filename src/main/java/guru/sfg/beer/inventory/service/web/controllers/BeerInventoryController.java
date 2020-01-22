@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * Created by jt on 2019-05-31.
- */
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
