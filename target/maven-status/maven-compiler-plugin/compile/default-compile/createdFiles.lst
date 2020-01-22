@@ -1,0 +1,12 @@
+guru\sfg\beer\inventory\service\bootstrap\BeerInventoryBootstrap.class
+guru\sfg\beer\inventory\service\web\mappers\DateMapper.class
+guru\sfg\beer\inventory\service\web\mappers\BeerInventoryMapper.class
+guru\sfg\beer\inventory\service\BeerInventoryApplication.class
+guru\sfg\beer\inventory\service\domain\BaseEntity.class
+guru\sfg\beer\inventory\service\domain\BeerInventory.class
+guru\sfg\beer\inventory\service\web\model\BeerInventoryDto$BeerInventoryDtoBuilder.class
+guru\sfg\beer\inventory\service\domain\BeerInventory$BeerInventoryBuilder.class
+guru\sfg\beer\inventory\service\web\model\BeerInventoryDto.class
+guru\sfg\beer\inventory\service\web\controllers\BeerInventoryController.class
+guru\sfg\beer\inventory\service\repositories\BeerInventoryRepository.class
+guru\sfg\beer\inventory\service\web\mappers\BeerInventoryMapperImpl.class
