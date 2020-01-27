@@ -1,4 +1,4 @@
-package guru.sfg.common.events;
+package guru.sfg.brewery.beerservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

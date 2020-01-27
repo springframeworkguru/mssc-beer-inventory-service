@@ -6,9 +6,7 @@ import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-/**
- * Created by jt on 2019-02-13.
- */
+
 @Component
 public class DateMapper {
 

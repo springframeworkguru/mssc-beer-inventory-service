@@ -49,5 +49,4 @@ public class BeerOrderDto {
     private String customerRef;
     private List<BeerOrderLineDto> beerOrderLines;
     private String orderStatus;
-    private String orderStatusCallbackUrl;
 }
