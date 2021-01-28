@@ -14,4 +14,11 @@
     <name>mssc-beer-inventory-service</name>
     <description>MSSC Beer Inventory Service</description>
 
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
+<!--        </dependency>-->
+<!--    </dependencies>-->
+
 </project>
