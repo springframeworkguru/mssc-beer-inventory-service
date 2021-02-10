@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.jms.artemis.ArtemisAutoConfigurati
 public class BeerInventoryApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(BeerInventoryApplication.class, args);
     }
 
