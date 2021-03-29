@@ -1,9 +1,29 @@
 [![CircleCI](https://circleci.com/gh/Fredohm/mssc-beer-inventory-service.svg?style=svg)](https://circleci.com/gh/Fredohm/mssc-beer-inventory-service)
 # MSSC Beer Inventory Service
 
-This repository contains source code examples used to support my on-line courses about the Spring Framework.
+# Default Port Mappings - For Single Host
 
-You can learn more about the courses here:
-* [Spring Boot Microservices with Spring Cloud](https://www.udemy.com/spring-boot-microservices-with-spring-cloud-beginner-to-guru/?couponCode=GIT_HUB2)
-* [Spring Framework 5: Beginner to Guru](https://www.udemy.com/course/spring-framework-5-beginner-to-guru/?couponCode=GITHUB_SFGPETCLINIC)
-* [Testing Spring Boot: Beginner to Guru](https://www.udemy.com/testing-spring-boot-beginner-to-guru/?couponCode=GITHUB_REPO_SF5B2G)
+
+
+<table>
+<thead>
+<tr>
+<th>Service Name</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/Fredohm/mssc-beer-service">Brewery Beer Service</a></td>
+<td>8080</td>
+</tr>
+<tr>
+<td><a href="https://github.com/Fredohm/mssc-beer-order-service">Brewery Beer Order Service</a></td>
+<td>8081</td>
+</tr>
+<tr>
+<td>Brewery Beer Inventory Service</td>
+<td>8082</td>
+</tr>
+</tbody>
+</table>
