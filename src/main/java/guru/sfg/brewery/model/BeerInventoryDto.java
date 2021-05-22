@@ -1,4 +1,4 @@
-package guru.sfg.beer.inventory.service.web.model;
+package guru.sfg.brewery.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +20,6 @@ public class BeerInventoryDto {
     private OffsetDateTime createdDate;
     private OffsetDateTime lastModifiedDate;
     private UUID beerId;
+    private String upc;
     private Integer quantityOnHand;
 }
