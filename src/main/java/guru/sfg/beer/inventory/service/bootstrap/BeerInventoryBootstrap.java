@@ -7,6 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 /**
@@ -25,10 +31,15 @@ public class BeerInventoryBootstrap implements CommandLineRunner {
 
     private final BeerInventoryRepository beerInventoryRepository;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         if(beerInventoryRepository.count() == 0){
             loadInitialInv();
+//            bootstrap2();
         }
     }
 
@@ -54,6 +65,19 @@ public class BeerInventoryBootstrap implements CommandLineRunner {
                 .quantityOnHand(50)
                 .build());
 
+
+
         log.debug("Loaded Inventory. Record count: " + beerInventoryRepository.count());
     }
+
+    public void bootstrap2() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            Files.readAllLines(Path.of("src/main/resources/data.txt")).forEach(sb::append);
+            em.createNativeQuery(sb.toString()).executeUpdate();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

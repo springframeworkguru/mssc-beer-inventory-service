@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import java.sql.Timestamp;
@@ -44,6 +45,8 @@ public class BeerInventory extends BaseEntity{
     }
 
     private UUID beerId;
+
     private String upc;
+
     private Integer quantityOnHand = 0;
 }
