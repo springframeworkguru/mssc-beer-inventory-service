@@ -38,8 +38,8 @@ public class BeerInventoryBootstrap implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         if(beerInventoryRepository.count() == 0){
-            loadInitialInv();
-//            bootstrap2();
+//            loadInitialInv();
+            bootstrap2();
         }
     }
 
