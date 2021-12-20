@@ -73,7 +73,7 @@ public class BeerInventoryBootstrap implements CommandLineRunner {
     public void bootstrap2() {
         try {
             StringBuilder sb = new StringBuilder();
-            Files.readAllLines(Path.of("src/main/resources/data.txt")).forEach(sb::append);
+            Files.readAllLines(Path.of("src/main/resources/data.sql")).forEach(sb::append);
             em.createNativeQuery(sb.toString()).executeUpdate();
         } catch (IOException e) {
             e.printStackTrace();
