@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
@@ -63,5 +65,18 @@ public class AllocationServiceImpl implements AllocationService {
                 beerInventoryRepository.delete(beerInventory);
             }
         }
+    }
+
+    @Transactional
+    @Override
+    public void deallocateOrder(BeerOrderDto dto) {
+        dto.getBeerOrderLines().forEach(line->{
+            BeerInventory inventory = BeerInventory.builder()
+                    .beerId(line.getBeerId())
+                    .upc(line.getUpc())
+                    .quantityOnHand(line.getQuantityAllocated())
+                    .build();
+            beerInventoryRepository.save(inventory);
+        });
     }
 }
