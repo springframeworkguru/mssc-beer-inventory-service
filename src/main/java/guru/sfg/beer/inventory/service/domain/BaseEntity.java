@@ -46,23 +46,23 @@ public class BaseEntity {
     }
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Type(type="org.hibernate.type.UUIDCharType")
+//    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(
+//            name = "UUID",
+//            strategy = "org.hibernate.id.UUIDGenerator"
+//    )
+//    @Type(type="org.hibernate.type.UUIDCharType")
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
     private UUID id;
 
     @Version
     private Long version;
 
-    @CreationTimestamp
-    @Column(updatable = false)
+//    @CreationTimestamp
+//    @Column(updatable = false)
     private Timestamp createdDate;
 
-    @UpdateTimestamp
+//    @UpdateTimestamp
     private Timestamp lastModifiedDate;
 
     public boolean isNew() {

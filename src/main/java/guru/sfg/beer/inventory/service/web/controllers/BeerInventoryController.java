@@ -6,6 +6,7 @@ import guru.sfg.beer.inventory.service.web.mappers.BeerInventoryMapper;
 import guru.sfg.brewery.model.BeerInventoryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +20,9 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@Profile("!reactive")
 public class BeerInventoryController {
 
-    private final BeerInventoryRepository beerInventoryRepository;
-    private final BeerInventoryMapper beerInventoryMapper;
     private final InventoryService inventoryService;
 
     @GetMapping("api/v1/beer/{beerId}/inventory")
