@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -33,10 +34,11 @@ public class InventoryServiceReactiveImpl implements InventoryReactiveService {
                 .map(beerInventoryMapper::beerInventoryToBeerInventoryDto);
     }
 
+    @Transactional
     @Override
     public Mono<Void> newInventoryRecord(Mono<BeerDto> beerDto) {
         return beerDto
-                .map(bdto -> BeerInventory.builder().beerId(bdto.getId()).quantityOnHand(bdto.getQuantityOnHand()).upc(bdto.getUpc()).build())
+                .map(bdto -> BeerInventory.builder().beerId(bdto.getId()).quantityOnHand(bdto.getQuantityOnHand()).upc(bdto.getUpc()).id(UUID.randomUUID()).build())
                 .flatMap(beerInventoryRepository::save).then(Mono.empty());
     }
 

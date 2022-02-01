@@ -18,12 +18,13 @@ import java.util.function.Function;
 
 import static org.springframework.data.relational.core.query.Criteria.where;
 import static org.springframework.data.relational.core.query.Query.query;
-
+//todo переделавать Id на String ибо это не вариант.
 @Repository
 @RequiredArgsConstructor
 public class BeerInventoryReactiveRepositoryImpl implements BeerInventoryReactiveRepository {
 
     private final R2dbcEntityTemplate template;
+    private final BeerRepo beerRepo;
 
     @Override
     public Flux<BeerInventory> findAllByBeerId(UUID id) {
@@ -33,7 +34,7 @@ public class BeerInventoryReactiveRepositoryImpl implements BeerInventoryReactiv
                 .all();
     }
 
-//    @Transactional(noRollbackForClassName = "IllegalStateException")
+    @Transactional(noRollbackForClassName = "IllegalStateException", propagation = Propagation.NESTED)
     @Override
     public Mono<BeerInventory> save(BeerInventory save) {
         return template.insert(BeerInventory.class)
@@ -48,10 +49,20 @@ public class BeerInventoryReactiveRepositoryImpl implements BeerInventoryReactiv
                 .all();
     }
 
-    @Transactional(noRollbackForClassName = "IllegalArgumentException", propagation = Propagation.NESTED)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public Mono<Void> delete(BeerInventory delete) {
-        //todo придется использовать native query
-        return template.query()
+        return template.getDatabaseClient()
+                .sql("DELETE FROM `beer_inventory` WHERE `id`=:id")
+                .bind("id",delete.getId().toString())
+                .then();
+    }
+    @Transactional(noRollbackForClassName = "RuntimeException")
+    @Override
+    public Mono<BeerInventory> findById(UUID id) {
+        return template.select(BeerInventory.class)
+                .from("beer_inventory")
+                .matching(query(where("id").is(id.toString())))
+                .first();
     }
 }

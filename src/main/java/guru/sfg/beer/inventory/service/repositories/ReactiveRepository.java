@@ -27,4 +27,5 @@ public interface ReactiveRepository<U,I> {
     Mono<U> save(U save);
     Mono<Void> delete(U delete);
     Flux<U> findAllByUpc(String upc);
+    Mono<U> findById(I id);
 }
