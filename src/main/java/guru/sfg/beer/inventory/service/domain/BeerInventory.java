@@ -16,40 +16,44 @@
  */
 package guru.sfg.beer.inventory.service.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.Type;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Version;
 import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
  * Created by jt on 2019-01-26.
  */
+
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-public class BeerInventory extends BaseEntity{
+@ToString
+public class BeerInventory{
 
     @Builder
-    public BeerInventory(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, UUID beerId,
-                         String upc, Integer quantityOnHand) {
-        super(id, version, createdDate, lastModifiedDate);
+    public BeerInventory(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, UUID beerId, String upc, Integer quantityOnHand) {
+        this.id = id;
+        this.version = version;
+        this.createdDate = createdDate;
+        this.lastModifiedDate = lastModifiedDate;
         this.beerId = beerId;
         this.upc = upc;
         this.quantityOnHand = quantityOnHand;
     }
 
-//    @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
+    @Id
+    private UUID id;
+    private Long version;
+    private Timestamp createdDate;
+    private Timestamp lastModifiedDate;
     private UUID beerId;
-
     private String upc;
-
     private Integer quantityOnHand = 0;
+
+
 }

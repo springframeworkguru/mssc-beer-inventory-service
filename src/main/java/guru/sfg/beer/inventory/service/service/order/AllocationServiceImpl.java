@@ -1,24 +1,22 @@
 package guru.sfg.beer.inventory.service.service.order;
 
 import guru.sfg.beer.inventory.service.domain.BeerInventory;
-import guru.sfg.beer.inventory.service.repositories.BeerInventoryRepository;
+import guru.sfg.beer.inventory.service.repositories.BeerInventoryReactiveRepository;
 import guru.sfg.brewery.model.BeerOrderDto;
 import guru.sfg.brewery.model.BeerOrderLineDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class AllocationServiceImpl implements AllocationService {
 
-    private final BeerInventoryRepository beerInventoryRepository;
+    private final BeerInventoryReactiveRepository beerInventoryRepository;
 
     @Override
     public Boolean allocateOrder(BeerOrderDto beerOrderDto) {
@@ -42,7 +40,7 @@ public class AllocationServiceImpl implements AllocationService {
     }
 
     private void allocateBeerOrderLine(BeerOrderLineDto beerOrderLine) {
-        List<BeerInventory> beerInventoryList = beerInventoryRepository.findAllByUpc(beerOrderLine.getUpc());
+        List<BeerInventory> beerInventoryList = beerInventoryRepository.findAllByUpc(beerOrderLine.getUpc()).collectList().block();
 
         for (BeerInventory beerInventory : beerInventoryList) {
             int inventory = (beerInventory.getQuantityOnHand() == null) ? 0 : beerInventory.getQuantityOnHand();
@@ -67,7 +65,7 @@ public class AllocationServiceImpl implements AllocationService {
         }
     }
 
-    @Transactional
+//    @Transactional
     @Override
     public void deallocateOrder(BeerOrderDto dto) {
         dto.getBeerOrderLines().forEach(line->{

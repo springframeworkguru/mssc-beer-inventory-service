@@ -19,7 +19,6 @@ import java.util.function.Function;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Profile("reactive")
 public class InventoryServiceReactiveImpl implements InventoryReactiveService {
 
     private final BeerInventoryMapper beerInventoryMapper;
@@ -29,14 +28,19 @@ public class InventoryServiceReactiveImpl implements InventoryReactiveService {
     public Flux<BeerInventoryDto> findAllInventoryRecordsByBeerId(UUID beerId) {
         return beerInventoryRepository
                 .findAllByBeerId(beerId)
+                .switchIfEmpty(Flux.empty())
+                .log("Found beerInventories: ")
                 .map(beerInventoryMapper::beerInventoryToBeerInventoryDto);
     }
 
     @Override
     public Mono<Void> newInventoryRecord(Mono<BeerDto> beerDto) {
-        //todo заколнчили здесь
-        return beerDto.map()
+        return beerDto
+                .map(bdto -> BeerInventory.builder().beerId(bdto.getId()).quantityOnHand(bdto.getQuantityOnHand()).upc(bdto.getUpc()).build())
+                .flatMap(beerInventoryRepository::save).then(Mono.empty());
     }
+
+
 
 //    @Override
 //    public Mono<Void> newInventoryRecord(Mono<BeerDto> beerDtoMono) {

@@ -24,5 +24,7 @@ import reactor.core.publisher.Mono;
  */
 public interface ReactiveRepository<U,I> {
     Flux<U> findAllByBeerId(I id);
-    Mono<U> save(Mono<U> save);
+    Mono<U> save(U save);
+    Mono<Void> delete(U delete);
+    Flux<U> findAllByUpc(String upc);
 }
