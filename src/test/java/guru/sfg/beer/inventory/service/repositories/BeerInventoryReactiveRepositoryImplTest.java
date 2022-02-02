@@ -24,7 +24,7 @@ class BeerInventoryReactiveRepositoryImplTest {
     void findAllByBeerId() {
         Phaser phaser = new Phaser(1);
         String uuid = "a712d914-61ea-4623-8bd0-32c0f6545bfd";
-        repository.findAllByBeerId(UUID.fromString(uuid)).subscribe(
+        repository.findAllByBeerId(uuid).subscribe(
                 System.out::println,
                 throwable -> System.out.println(throwable.getMessage()),
                 ()->{
@@ -37,10 +37,11 @@ class BeerInventoryReactiveRepositoryImplTest {
 
     @Test
     void save() {
-        Phaser phaser = new Phaser(1);
-        final UUID beerId = UUID.randomUUID();
+        Phaser phaser = new Phaser(2);
+        final String beerId = UUID.randomUUID().toString();
+        final String id = UUID.randomUUID().toString();
         AtomicReference<BeerInventory> reference = new AtomicReference<>();
-        BeerInventory beerInventory = BeerInventory.builder().beerId(beerId).quantityOnHand(30).upc("12345").id(UUID.randomUUID()).build();
+        BeerInventory beerInventory = BeerInventory.builder().beerId(beerId).quantityOnHand(30).upc("12345").id(id).build();
 
         repository.save(beerInventory).subscribe(new Consumer<BeerInventory>() {
             @Override
@@ -61,19 +62,29 @@ class BeerInventoryReactiveRepositoryImplTest {
 
         phaser.awaitAdvance(0);
 
-        System.out.println("First phase is done!");
+        System.out.println("0 phase is done!");
 
-        repository.findAllByBeerId(beerId).take(1).subscribe(beerInventory1 -> {
-                    reference.set(beerInventory1);
-                },
-                throwable -> { System.out.println(throwable.getMessage() + "\n" + throwable.getCause()); phaser.arrive();},
-                ()->{
-                    System.out.println("Done!");
-                    phaser.arrive();
-                });
+        repository.findById(id).subscribe(new Consumer<BeerInventory>() {
+            @Override
+            public void accept(BeerInventory beerInventory) {
+                reference.set(beerInventory);
+                phaser.arrive();
+                System.out.println("Phaser arrived on success!");
+            }
+        }, throwable -> {
+
+            System.out.println(throwable.toString());
+            phaser.arrive();
+            System.out.println("Phaser arrived on error!");
+
+        }, ()-> {
+            System.out.println("Phaser arrived on done!");
+            phaser.arrive();
+        });
+
 
         phaser.awaitAdvance(1);
-        System.out.println("Phase 2 is done!");
+        System.out.println("Phase 1 is done!");
         assertThat(reference.get().getBeerId()).isEqualTo(beerId);
     }
 
@@ -94,10 +105,10 @@ class BeerInventoryReactiveRepositoryImplTest {
 
     @Test
     void delete() {
-        Phaser phaser = new Phaser(1);
+        Phaser phaser = new Phaser(2);
 
-        UUID beerId = UUID.randomUUID();
-        UUID id = UUID.randomUUID();
+        String beerId = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
         System.out.println("UUID of Inventory is: " + id);
 
         final AtomicReference<BeerInventory> reference = new AtomicReference<>();
@@ -107,34 +118,41 @@ class BeerInventoryReactiveRepositoryImplTest {
         repository.save(beerInventory).subscribe(new Consumer<BeerInventory>() {
             @Override
             public void accept(BeerInventory beerInventory) {
+                System.out.println("Phaser arrived with success!");
                 phaser.arrive();
             }
         }, throwable -> {
+            System.out.println("Phaser arrived with error!");
             System.out.println(throwable.getMessage());
+            phaser.arrive();
+        }, ()->{
+            System.out.println("Phaser arrived at done!");
+            phaser.arrive();
+        });
+
+        phaser.awaitAdvance(phaser.getPhase());
+        System.out.println("Phase 0 finished!");
+
+        repository.findById(id).subscribe(beerInventory1 -> {
+            reference.set(beerInventory1);
+            phaser.arrive();
+            System.out.println("Phaser arrived with success!");
+        }, throwable -> {
+            System.out.println(throwable.toString());
+            phaser.arrive();
+            System.out.println("Phaser arrived with error!");
+        }, ()-> {
+            System.out.println("Phaser arrived at done!");
             phaser.arrive();
         });
 
         phaser.awaitAdvance(phaser.getPhase());
 
-        repository.findAllByBeerId(beerId).take(1).subscribe(beerInventory1 -> {
-                    reference.set(beerInventory1);
-                    phaser.arrive();
-                },
-                throwable -> {
-                    System.out.println(throwable.getMessage());
-                    phaser.arrive();},
-                ()->{
-                    System.out.println("Finding is done!");
-                });
-
-        phaser.awaitAdvance(phaser.getPhase());
-
         assertThat(reference.get().getBeerId()).isEqualTo(beerId);
-
+        phaser.arriveAndDeregister();
         repository.delete(BeerInventory.builder().id(id).build())
                 .subscribe(Void->{
                     System.out.println("Consumed!");
-                    phaser.arrive();
                 },throwable -> {
                     System.out.println(throwable.getMessage() + "*******ERROR!*******");
                     phaser.arrive();
@@ -144,6 +162,21 @@ class BeerInventoryReactiveRepositoryImplTest {
                 });
 
         phaser.awaitAdvance(phaser.getPhase());
+        phaser.register();
+        reference.set(null);
+        repository.findById(id).subscribe(beerInventory1 -> {
+            reference.set(beerInventory);
+            phaser.arrive();
+            System.out.println("Phaser arrived with success!");
+        }, throwable -> {
+            System.out.println(throwable.toString());
+            phaser.arrive();
+            System.out.println("Phaser arrived with error!");
+        }, ()-> {
+            System.out.println("Phaser arrived at done!");
+            phaser.arrive();
+        });
+        assertThat(reference.get()).isNull();
     }
 
     @Test
@@ -158,7 +191,7 @@ class BeerInventoryReactiveRepositoryImplTest {
             }
         };
 
-        repository.delete(BeerInventory.builder().id(UUID.fromString("077b7c3c-d9e1-4d54-95f7-da9483cb6a09")).build()).subscribe(positive,negative,()-> {System.out.println("Done!"); phaser.arrive();});
+        repository.delete(BeerInventory.builder().id("077b7c3c-d9e1-4d54-95f7-da9483cb6a09").build()).subscribe(positive,negative,()-> {System.out.println("Done!"); phaser.arrive();});
         phaser.awaitAdvance(0);
     }
 

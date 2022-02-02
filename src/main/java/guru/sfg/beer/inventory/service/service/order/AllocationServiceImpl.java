@@ -7,6 +7,8 @@ import guru.sfg.brewery.model.BeerOrderLineDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,12 +67,12 @@ public class AllocationServiceImpl implements AllocationService {
         }
     }
 
-//    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void deallocateOrder(BeerOrderDto dto) {
         dto.getBeerOrderLines().forEach(line->{
             BeerInventory inventory = BeerInventory.builder()
-                    .beerId(line.getBeerId())
+                    .beerId(line.getBeerId().toString())
                     .upc(line.getUpc())
                     .quantityOnHand(line.getQuantityAllocated())
                     .build();

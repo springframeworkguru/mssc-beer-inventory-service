@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebFlux;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -22,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class BeerInventoryHandlerTest {
 
     WebClient client;
-    BeerInventoryReactiveRepository repository;
 
     @BeforeEach
     void setup(){
@@ -33,7 +33,6 @@ class BeerInventoryHandlerTest {
     }
 
     @Test
-    @Disabled
     void listBeersById() {
         String uuid = "a712d914-61ea-4623-8bd0-32c0f6545bfd";
         Phaser phaser = new Phaser(1);
@@ -45,8 +44,8 @@ class BeerInventoryHandlerTest {
                 .accept(MediaType.APPLICATION_NDJSON)
                 .retrieve()
                 .bodyToFlux(BeerInventory.class)
-                .take(5)
                 .subscribe(consumer,throwableConsumer,()-> { System.out.println("Done!"); phaser.arrive();});
+
         phaser.awaitAdvance(0);
     }
 }

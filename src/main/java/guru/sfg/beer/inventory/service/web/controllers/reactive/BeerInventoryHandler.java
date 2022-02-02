@@ -4,16 +4,12 @@ import guru.sfg.beer.inventory.service.service.InventoryReactiveService;
 import guru.sfg.brewery.model.BeerInventoryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivestreams.Publisher;
-import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
@@ -23,8 +19,10 @@ public class BeerInventoryHandler {
     private final InventoryReactiveService inventoryService;
 
     public Mono<ServerResponse> listBeersById(ServerRequest request) {
+        log.debug("Received a request for beerId {}", request.pathVariable("beerId"));
         return ServerResponse.ok()
-                .bodyValue(inventoryService.findAllInventoryRecordsByBeerId(UUID.fromString(request.pathVariable("beerId"))))
+                .contentType(MediaType.APPLICATION_NDJSON)
+                .body(inventoryService.findAllInventoryRecordsByBeerId(request.pathVariable("beerId")), BeerInventoryDto.class)
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 }

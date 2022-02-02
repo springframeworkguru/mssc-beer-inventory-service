@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface InventoryReactiveService {
-    Flux<BeerInventoryDto> findAllInventoryRecordsByBeerId(UUID id);
+    Flux<BeerInventoryDto> findAllInventoryRecordsByBeerId(String id);
     Mono<Void> newInventoryRecord(Mono<BeerDto> beerDto);
 }

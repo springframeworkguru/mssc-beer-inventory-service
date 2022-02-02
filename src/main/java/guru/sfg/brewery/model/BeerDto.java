@@ -22,6 +22,7 @@ public class BeerDto implements Serializable {
 
     @Null
     private UUID id;
+
     @NotNull
     private String beerName;
 

@@ -1,8 +1,6 @@
 package guru.sfg.beer.inventory.service.config;
 
 import dev.miku.r2dbc.mysql.MySqlConnectionFactoryProvider;
-import guru.sfg.beer.inventory.service.domain.converters.BeerInventoryReadingConverter;
-import guru.sfg.beer.inventory.service.domain.converters.BeerInventoryWritingConverter;
 import io.r2dbc.spi.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,11 +57,4 @@ public class ReactiveDataSourceConfig extends AbstractR2dbcConfiguration {
         return new R2dbcEntityTemplate(databaseClient, MySqlDialect.INSTANCE);
     }
 
-    @Override
-    protected List<Object> getCustomConverters() {
-        List<Object> converterList = new ArrayList<>();
-        converterList.add(new BeerInventoryWritingConverter());
-        converterList.add(new BeerInventoryReadingConverter());
-        return converterList;
-    }
 }

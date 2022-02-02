@@ -17,13 +17,9 @@
 package guru.sfg.beer.inventory.service.domain;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Version;
 import java.sql.Timestamp;
-import java.util.UUID;
 
 /**
  * Created by jt on 2019-01-26.
@@ -36,7 +32,7 @@ import java.util.UUID;
 public class BeerInventory{
 
     @Builder
-    public BeerInventory(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, UUID beerId, String upc, Integer quantityOnHand) {
+    public BeerInventory(String id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, String beerId, String upc, Integer quantityOnHand) {
         this.id = id;
         this.version = version;
         this.createdDate = createdDate;
@@ -46,14 +42,14 @@ public class BeerInventory{
         this.quantityOnHand = quantityOnHand;
     }
 
-    @Id
-    private UUID id;
-    private Long version;
-    private Timestamp createdDate;
-    private Timestamp lastModifiedDate;
-    private UUID beerId;
-    private String upc;
-    private Integer quantityOnHand = 0;
+        @Id
+        private String id;
+        private Long version;
+        private Timestamp createdDate;
+        private Timestamp lastModifiedDate;
+        private String beerId;
+        private String upc;
+        private Integer quantityOnHand = 0;
 
 
 }

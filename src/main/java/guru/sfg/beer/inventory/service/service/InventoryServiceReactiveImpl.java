@@ -26,7 +26,7 @@ public class InventoryServiceReactiveImpl implements InventoryReactiveService {
     private final BeerInventoryReactiveRepository beerInventoryRepository;
 
     @Override
-    public Flux<BeerInventoryDto> findAllInventoryRecordsByBeerId(UUID beerId) {
+    public Flux<BeerInventoryDto> findAllInventoryRecordsByBeerId(String beerId) {
         return beerInventoryRepository
                 .findAllByBeerId(beerId)
                 .switchIfEmpty(Flux.empty())
@@ -38,8 +38,12 @@ public class InventoryServiceReactiveImpl implements InventoryReactiveService {
     @Override
     public Mono<Void> newInventoryRecord(Mono<BeerDto> beerDto) {
         return beerDto
-                .map(bdto -> BeerInventory.builder().beerId(bdto.getId()).quantityOnHand(bdto.getQuantityOnHand()).upc(bdto.getUpc()).id(UUID.randomUUID()).build())
+                .map(bdto -> BeerInventory.builder().beerId(bdto.getId().toString()).quantityOnHand(bdto.getQuantityOnHand()).upc(bdto.getUpc()).id(getIdAsString()).build())
                 .flatMap(beerInventoryRepository::save).then(Mono.empty());
+    }
+
+    private String getIdAsString(){
+        return UUID.randomUUID().toString();
     }
 
 

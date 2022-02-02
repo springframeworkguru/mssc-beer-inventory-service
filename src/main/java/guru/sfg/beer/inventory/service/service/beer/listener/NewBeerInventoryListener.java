@@ -23,7 +23,7 @@ public class NewBeerInventoryListener {
         log.debug("New inventory event!");
         inventoryService.newInventoryRecord(Mono.just(event.getBeerDto()));
     }
-
+    //for instance how to work with Message interface
     //    @JmsListener(destination = JmsConfig.NEW_INVENTORY_QUEUE)
     //    public void listen(Message message){
     //        try {
