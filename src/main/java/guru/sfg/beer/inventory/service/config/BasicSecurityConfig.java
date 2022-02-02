@@ -26,19 +26,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Profile("!oauth")
 public class BasicSecurityConfig {
 
-    @Value("${sfg.brewery.username}")
-    private String username;
-
-    @Value("${sfg.brewery.password}")
-    private String password;
-
     @Bean
-    public MapReactiveUserDetailsService userDetailsService() {
+    public MapReactiveUserDetailsService userDetailsService( @Value("${sfg.brewery.username}") String username,
+                                                             @Value("${sfg.brewery.password}") String password) {
         UserDetails user = User.builder()
                 .username(username)
                 .password(password)
                 .roles("USER")
-                .passwordEncoder(s -> passwordEncoder().encode(s))
                 .build();
         return new MapReactiveUserDetailsService(user);
     }
@@ -46,7 +40,7 @@ public class BasicSecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.authorizeExchange(exchanges -> exchanges
-                        .anyExchange().permitAll()
+                        .anyExchange().authenticated()
                 )
                 .httpBasic(withDefaults());
         return http.build();
