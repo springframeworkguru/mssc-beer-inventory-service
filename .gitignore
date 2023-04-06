@@ -140,3 +140,4 @@ Desktop.ini
 .eslintcache
 /.idea/
 
+/target/generated-sources/annotations/guru/sfg/beer/inventory/service/web/mappers/BeerInventoryMapperImpl.java
